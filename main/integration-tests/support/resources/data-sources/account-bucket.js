@@ -16,10 +16,9 @@
 const _ = require('lodash');
 
 const Resource = require('../base/resource');
-const AccountBuckets = require('./account-buckets');
-const { unregisterAccount } = require('../../complex/unregister-account');
+const { unregisterAccountBucket } = require('../../complex/unregister-account');
 
-class Account extends Resource {
+class AccountBucket extends Resource {
   constructor({ clientSession, id, parent }) {
     super({
       clientSession,
@@ -31,15 +30,11 @@ class Account extends Resource {
     if (_.isEmpty(parent)) throw Error('A parent resource was not provided to resource type [account]');
   }
 
-  buckets() {
-    return new AccountBuckets({ clientSession: this.clientSession, parent: this });
-  }
-
   async cleanup() {
-    await unregisterAccount({ aws: this.setup.aws, id: this.id });
+    await unregisterAccountBucket({ aws: this.setup.aws, id: this.id });
   }
 
   // ************************ Helpers methods ************************
 }
 
-module.exports = Account;
+module.exports = AccountBucket;
