@@ -30,8 +30,8 @@ describe('List study scenarios', () => {
     accountId = setup.gen.accountId();
     await adminSession.resources.dataSources.accounts.create({ id: accountId });
 
-    // We register a bucket to be used by all the tests in this test suite
-    bucketName = setup.gen.string({ prefix: 'ds-bucket-test' });
+    // We register a bucket to be used by all the BYOB-related tests in this test suite
+    bucketName = setup.gen.string({ prefix: 'ds-study-test' });
     await adminSession.resources.dataSources.accounts
       .account(accountId)
       .buckets()
