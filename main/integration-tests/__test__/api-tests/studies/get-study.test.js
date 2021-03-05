@@ -67,4 +67,31 @@ describe('Get study scenarios', () => {
       });
     });
   });
+
+  describe('Getting a BYOB study', () => {
+    it('should return BYOB studies with Organization category', async () => {
+      const researcherSession = await setup.createResearcherSession();
+      const accountId = setup.gen.accountId();
+      const defaultBucketBody = researcherSession.resources.dataSources.accounts.account(accountId).buckets.defaults();
+      const studyId = setup.gen.string({ prefix: `get-studies-test-byob` });
+
+      // Create a DS Account
+      // await researcherSession.resources.dataSources.accounts.create({ id: accountId });
+
+      // // Link a bucket to the DS Account
+      // await researcherSession.resources.dataSources.accounts
+      //   .account(accountId)
+      //   .buckets()
+      //   .create({ id: bucketName });
+
+      // await researcherSession.resources.dataSources.accounts
+      //   .account(accountId)
+      //   .buckets()
+      //   .bucket(bucketId)
+      //   .get()
+      //   .studies.create({ id: studyId });
+
+      expect();
+    });
+  });
 });
