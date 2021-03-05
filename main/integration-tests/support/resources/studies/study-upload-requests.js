@@ -30,6 +30,7 @@ class StudyUploadRequests extends Resource {
   }
 
   // ************************ Helpers methods ************************
+  // This is a query string param. eg: upload-requests?filenames=encodeURIComponent(<filename>)
   async getPresignedRequests(filenames = []) {
     return this.get({ filenames });
   }

@@ -19,10 +19,23 @@ const errorCode = require('../../../support/utils/error-code');
 describe('List study scenarios', () => {
   let setup;
   let adminSession;
+  let accountId;
+  let bucketName;
 
   beforeAll(async () => {
     setup = await runSetup();
     adminSession = await setup.defaultAdminSession();
+
+    // We register an account to be used by all the tests in this test suite
+    accountId = setup.gen.accountId();
+    await adminSession.resources.dataSources.accounts.create({ id: accountId });
+
+    // We register a bucket to be used by all the tests in this test suite
+    bucketName = setup.gen.string({ prefix: 'ds-bucket-test' });
+    await adminSession.resources.dataSources.accounts
+      .account(accountId)
+      .buckets()
+      .create({ name: bucketName });
   });
 
   afterAll(async () => {
@@ -63,56 +76,69 @@ describe('List study scenarios', () => {
       });
     });
 
-    it('should return BYOB studies with Organization category', async () => {
-      const researcherSession = await setup.createResearcherSession();
-      const accountId = setup.gen.accountId();
-      const defaultBucketBody = researcherSession.resources.dataSources.accounts.account(accountId).buckets.defaults();
-      const studyId = setup.gen.string({ prefix: `get-studies-test-byob` });
+    describe('Getting study list with BYOB studies', () => {
+      it('should fail to fetch BYOB study with anonymous users', async () => {
+        const anonymousSession = await setup.createAnonymousSession();
+        const admin2Session = await setup.createAdminSession();
+        const id = setup.gen.string({ prefix: 'get-studies-test-byob' });
+        const study = {
+          id,
+          adminUsers: [admin2Session.user.uid],
+        };
 
-      // Create a DS Account
-      await researcherSession.resources.dataSources.accounts.create({ id: accountId });
+        await admin2Session.resources.dataSources.accounts
+          .account(accountId)
+          .buckets()
+          .bucket(bucketName)
+          .studies()
+          .create(study);
 
-      // Link a bucket to the DS Account
-      await researcherSession.resources.dataSources.accounts
-        .account(accountId)
-        .buckets()
-        .create(defaultBucketBody);
+        await expect(anonymousSession.resources.studies.getOrganization()).rejects.toMatchObject({
+          code: errorCode.http.code.badImplementation,
+        });
+      });
 
-      await researcherSession.resources.dataSources.accounts
-        .account(accountId)
-        .buckets()
-        .bucket(bucketId)
-        .get()
-        .studies.create({ id: studyId });
+      it('should fail to fetch BYOB studies with unauthorized users', async () => {
+        const researcherSession = await setup.createResearcherSession();
+        const admin2Session = await setup.createAdminSession();
+        const id = setup.gen.string({ prefix: 'get-studies-test-byob' });
+        const study = {
+          id,
+          adminUsers: [admin2Session.user.uid],
+        };
 
-      await expect(researcherSession.resources.studies.getOrganization()).resolves.toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ bucket: defaultBucketBody.name, id: studyId }),
-          // {
-          //   access: ['admin'],
-          //   accountId: '644591511405',
-          //   appRoleArn: 'arn:aws:iam::644591511405:role/swb-Lvl9dTe5cR8WAsnPP08nHD-app-1614956010367',
-          //   awsPartition: 'aws',
-          //   bucket: 'byob-data-source-bucket',
-          //   bucketAccess: 'roles',
-          //   category: 'Organization',
-          //   createdAt: '2021-03-05T14:53:30.199Z',
-          //   createdBy: 'u-c5Z2OuvzZM0Feif024Kul',
-          //   folder: '/',
-          //   id: 'bucket-is-study',
-          //   kmsScope: 'bucket',
-          //   name: 'bucket-is-study',
-          //   projectId: 'TestProj',
-          //   qualifier: 'swb-Lvl9dTe5cR8WAsnPP08nHD',
-          //   region: 'us-east-1',
-          //   rev: 0,
-          //   status: 'reachable',
-          //   statusAt: '2021-03-05T15:11:06.002Z',
-          //   updatedAt: '2021-03-05T15:11:06.003Z',
-          //   updatedBy: '_system_',
-          // },
-        ]),
-      );
+        await admin2Session.resources.dataSources.accounts
+          .account(accountId)
+          .buckets()
+          .bucket(bucketName)
+          .studies()
+          .create(study);
+
+        await expect(researcherSession.resources.studies.getOrganization()).resolves.toEqual(
+          expect.not.arrayContaining([expect.objectContaining({ bucket: bucketName, id: study.id, accountId })]),
+        );
+      });
+
+      it('should return BYOB studies with Organization category', async () => {
+        const researcherSession = await setup.createResearcherSession();
+        const admin2Session = await setup.createAdminSession();
+        const id = setup.gen.string({ prefix: 'get-studies-test-byob' });
+        const study = {
+          id,
+          adminUsers: [admin2Session.user.uid, researcherSession.user.uid],
+        };
+
+        await admin2Session.resources.dataSources.accounts
+          .account(accountId)
+          .buckets()
+          .bucket(bucketName)
+          .studies()
+          .create(study);
+
+        await expect(researcherSession.resources.studies.getOrganization()).resolves.toEqual(
+          expect.arrayContaining([expect.objectContaining({ bucket: bucketName, id: study.id, accountId })]),
+        );
+      });
     });
   });
 });

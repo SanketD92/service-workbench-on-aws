@@ -92,4 +92,6 @@ describe('Create study scenarios', () => {
       },
     );
   });
+
+  // Verify users cannot "create" studies by manually linking accountId and bucket
 });
