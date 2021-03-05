@@ -16,7 +16,6 @@
 const _ = require('lodash');
 
 const Resource = require('../base/resource');
-const AccountBuckets = require('./account-buckets');
 const { unregisterAccount } = require('../../complex/unregister-account');
 const Buckets = require('./buckets');
 
@@ -35,10 +34,6 @@ class Account extends Resource {
 
   buckets() {
     return new Buckets({ clientSession: this.clientSession, parent: this });
-  }
-
-  buckets() {
-    return new AccountBuckets({ clientSession: this.clientSession, parent: this });
   }
 
   async cleanup() {

@@ -66,7 +66,7 @@ describe('List study scenarios', () => {
     it('should return BYOB studies with Organization category', async () => {
       const researcherSession = await setup.createResearcherSession();
       const accountId = setup.gen.accountId();
-      const bucketId = setup.gen.bucketId();
+      const defaultBucketBody = researcherSession.resources.dataSources.accounts.account(accountId).buckets.defaults();
       const studyId = setup.gen.string({ prefix: `get-studies-test-byob` });
 
       // Create a DS Account
@@ -76,7 +76,7 @@ describe('List study scenarios', () => {
       await researcherSession.resources.dataSources.accounts
         .account(accountId)
         .buckets()
-        .create({ id: bucketId });
+        .create(defaultBucketBody);
 
       await researcherSession.resources.dataSources.accounts
         .account(accountId)
@@ -85,7 +85,34 @@ describe('List study scenarios', () => {
         .get()
         .studies.create({ id: studyId });
 
-      await expect(researcherSession.resources.studies.getOrganization()).resolves.toStrictEqual([]);
+      await expect(researcherSession.resources.studies.getOrganization()).resolves.toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ bucket: defaultBucketBody.name, id: studyId }),
+          // {
+          //   access: ['admin'],
+          //   accountId: '644591511405',
+          //   appRoleArn: 'arn:aws:iam::644591511405:role/swb-Lvl9dTe5cR8WAsnPP08nHD-app-1614956010367',
+          //   awsPartition: 'aws',
+          //   bucket: 'byob-data-source-bucket',
+          //   bucketAccess: 'roles',
+          //   category: 'Organization',
+          //   createdAt: '2021-03-05T14:53:30.199Z',
+          //   createdBy: 'u-c5Z2OuvzZM0Feif024Kul',
+          //   folder: '/',
+          //   id: 'bucket-is-study',
+          //   kmsScope: 'bucket',
+          //   name: 'bucket-is-study',
+          //   projectId: 'TestProj',
+          //   qualifier: 'swb-Lvl9dTe5cR8WAsnPP08nHD',
+          //   region: 'us-east-1',
+          //   rev: 0,
+          //   status: 'reachable',
+          //   statusAt: '2021-03-05T15:11:06.002Z',
+          //   updatedAt: '2021-03-05T15:11:06.003Z',
+          //   updatedBy: '_system_',
+          // },
+        ]),
+      );
     });
   });
 });
