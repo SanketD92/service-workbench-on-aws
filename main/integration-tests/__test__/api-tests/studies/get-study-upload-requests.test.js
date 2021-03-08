@@ -107,8 +107,7 @@ describe('Study files upload request scenarios', () => {
       });
     });
 
-    it('should fail BYOB study files upload request with unauthorized users', async () => {
-      const researcherSession = await setup.createResearcherSession();
+    it('should fail BYOB study files upload request with DS studies', async () => {
       const admin2Session = await setup.createAdminSession();
       const id = setup.gen.string({ prefix: 'file-upload-test-byob' });
       const study = {
@@ -124,38 +123,13 @@ describe('Study files upload request scenarios', () => {
         .create(study);
 
       await expect(
-        researcherSession.resources.studies
+        admin2Session.resources.studies
           .study(study.id)
           .uploadRequest()
           .getPresignedRequests('dummyFile1'),
       ).rejects.toMatchObject({
         code: errorCode.http.code.forbidden,
       });
-    });
-
-    it('should pass BYOB study files upload request but without DS Account ID', async () => {
-      const admin2Session = await setup.createAdminSession();
-      const id = setup.gen.string({ prefix: 'file-upload-test-byob' });
-      const study = {
-        id,
-        adminUsers: [admin2Session.user.uid],
-      };
-
-      await admin2Session.resources.dataSources.accounts
-        .account(accountId)
-        .buckets()
-        .bucket(bucketName)
-        .studies()
-        .create(study);
-
-      const retVal = await admin2Session.resources.studies
-        .study(study.id)
-        .uploadRequest()
-        .getPresignedRequests('dummyFile1');
-
-      // Future: Since the response from this API is a presignedUrl for the main account's study bucket,
-      // add a validation step on the backend to reject requests for DS registered studies
-      expect(retVal.dummyFile1.url).not.toContain(accountId); // <= accountId is the DS Account ID here
     });
   });
 });
