@@ -16,48 +16,58 @@
 const { runSetup } = require('../../../support/setup');
 const errorCode = require('../../../support/utils/error-code');
 
-describe('Register data source study scenarios', () => {
+describe('Get data source accounts scenarios', () => {
   let setup;
   let adminSession;
   let accountId;
-  let bucketName;
+  let studyId;
 
   beforeAll(async () => {
     setup = await runSetup();
     adminSession = await setup.defaultAdminSession();
 
+    // We use a different admin session so that study resources (permission) table
+    // can be cleaned
+    const admin2Session = await setup.createAdminSession();
+
     // We register an account to be used by all the tests in this test suite
     accountId = setup.gen.accountId();
-    await adminSession.resources.dataSources.accounts.create({ id: accountId });
+    await admin2Session.resources.dataSources.accounts.create({ id: accountId });
 
     // We register a bucket to be used by all the tests in this test suite
-    bucketName = setup.gen.string({ prefix: 'ds-bucket-test' });
-    await adminSession.resources.dataSources.accounts
+    const bucketName = setup.gen.string({ prefix: 'ds-bucket-test' });
+    await admin2Session.resources.dataSources.accounts
       .account(accountId)
       .buckets()
       .create({ name: bucketName });
+
+    // We register a study to be used by all the tests in this test suite
+    studyId = setup.gen.string({ prefix: 'ds-study-id-test' });
+    const study = {
+      id: studyId,
+      adminUsers: [admin2Session.user.uid],
+    };
+
+    await admin2Session.resources.dataSources.accounts
+      .account(accountId)
+      .buckets()
+      .bucket(bucketName)
+      .studies()
+      .create(study);
   });
 
   afterAll(async () => {
     await setup.cleanup();
   });
 
-  describe('Registering a data source study', () => {
+  describe('Getting data source accounts', () => {
     it('should fail for anonymous user', async () => {
       const anonymousSession = await setup.createAnonymousSession();
-      const id = setup.gen.string({ prefix: 'ds-study-id-test' });
-      const study = {
-        id,
-        adminUsers: [adminSession.user.uid],
-      };
-
       await expect(
         anonymousSession.resources.dataSources.accounts
           .account(accountId)
-          .buckets()
-          .bucket(bucketName)
           .studies()
-          .create(study),
+          .get(),
       ).rejects.toMatchObject({
         code: errorCode.http.code.badImplementation,
       });
@@ -65,21 +75,13 @@ describe('Register data source study scenarios', () => {
 
     it('should fail for inactive user', async () => {
       const researcherSession = await setup.createResearcherSession();
-      const id = setup.gen.string({ prefix: 'ds-study-id-test' });
-      const study = {
-        id,
-        adminUsers: [researcherSession.user.uid],
-      };
-
       await adminSession.resources.users.deactivateUser(researcherSession.user);
 
       await expect(
         researcherSession.resources.dataSources.accounts
           .account(accountId)
-          .buckets()
-          .bucket(bucketName)
           .studies()
-          .create(study),
+          .get(),
       ).rejects.toMatchObject({
         code: errorCode.http.code.unauthorized,
       });
@@ -87,19 +89,11 @@ describe('Register data source study scenarios', () => {
 
     it('should fail for internal guest', async () => {
       const guestSession = await setup.createUserSession({ userRole: 'internal-guest', projectId: [] });
-      const id = setup.gen.string({ prefix: 'ds-study-id-test' });
-      const study = {
-        id,
-        adminUsers: [guestSession.user.uid],
-      };
-
       await expect(
         guestSession.resources.dataSources.accounts
           .account(accountId)
-          .buckets()
-          .bucket(bucketName)
           .studies()
-          .create(study),
+          .get(),
       ).rejects.toMatchObject({
         code: errorCode.http.code.forbidden,
       });
@@ -107,19 +101,11 @@ describe('Register data source study scenarios', () => {
 
     it('should fail for external guest', async () => {
       const guestSession = await setup.createUserSession({ userRole: 'guest', projectId: [] });
-      const id = setup.gen.string({ prefix: 'ds-study-id-test' });
-      const study = {
-        id,
-        adminUsers: [guestSession.user.uid],
-      };
-
       await expect(
         guestSession.resources.dataSources.accounts
           .account(accountId)
-          .buckets()
-          .bucket(bucketName)
           .studies()
-          .create(study),
+          .get(),
       ).rejects.toMatchObject({
         code: errorCode.http.code.forbidden,
       });
@@ -127,40 +113,23 @@ describe('Register data source study scenarios', () => {
 
     it('should fail for researcher', async () => {
       const researcherSession = await setup.createResearcherSession();
-      const id = setup.gen.string({ prefix: 'ds-study-id-test' });
-      const study = {
-        id,
-        adminUsers: [researcherSession.user.uid],
-      };
-
       await expect(
         researcherSession.resources.dataSources.accounts
           .account(accountId)
-          .buckets()
-          .bucket(bucketName)
           .studies()
-          .create(study),
+          .get(),
       ).rejects.toMatchObject({
         code: errorCode.http.code.forbidden,
       });
     });
 
-    it('should return study registration information if admin', async () => {
-      const admin2Session = await setup.createAdminSession();
-      const id = setup.gen.string({ prefix: 'ds-study-id-test' });
-      const study = {
-        id,
-        adminUsers: [admin2Session.user.uid],
-      };
-
+    it('should return registered data source studies if admin', async () => {
       await expect(
-        admin2Session.resources.dataSources.accounts
+        adminSession.resources.dataSources.accounts
           .account(accountId)
-          .buckets()
-          .bucket(bucketName)
           .studies()
-          .create(study),
-      ).resolves.toMatchObject({ id, accountId, bucket: bucketName });
+          .get(),
+      ).resolves.toMatchObject([expect.objectContaining({ id: studyId })]);
     });
   });
 });

@@ -16,7 +16,7 @@
 const { runSetup } = require('../../../support/setup');
 const errorCode = require('../../../support/utils/error-code');
 
-describe('Register data source bucket scenarios', () => {
+describe('cfn for data source account scenarios', () => {
   let setup;
   let adminSession;
   let accountId;
@@ -32,89 +32,56 @@ describe('Register data source bucket scenarios', () => {
     await setup.cleanup();
   });
 
-  describe('Registering a data source bucket', () => {
+  describe('Generating cfn template for a data source account', () => {
     it('should fail for anonymous user', async () => {
       const anonymousSession = await setup.createAnonymousSession();
-      const name = setup.gen.string({ prefix: 'ds-bucket-test' });
 
-      await expect(
-        anonymousSession.resources.dataSources.accounts
-          .account(accountId)
-          .buckets()
-          .create({ name }),
-      ).rejects.toMatchObject({
+      await expect(anonymousSession.resources.dataSources.accounts.account(accountId).cfn()).rejects.toMatchObject({
         code: errorCode.http.code.badImplementation,
       });
     });
 
     it('should fail for inactive user', async () => {
       const researcherSession = await setup.createResearcherSession();
-      const name = setup.gen.string({ prefix: 'ds-bucket-test' });
 
       await adminSession.resources.users.deactivateUser(researcherSession.user);
 
-      await expect(
-        researcherSession.resources.dataSources.accounts
-          .account(accountId)
-          .buckets()
-          .create({ name }),
-      ).rejects.toMatchObject({
+      await expect(researcherSession.resources.dataSources.accounts.account(accountId).cfn()).rejects.toMatchObject({
         code: errorCode.http.code.unauthorized,
       });
     });
 
     it('should fail for internal guest', async () => {
       const guestSession = await setup.createUserSession({ userRole: 'internal-guest', projectId: [] });
-      const name = setup.gen.string({ prefix: 'ds-bucket-test' });
 
-      await expect(
-        guestSession.resources.dataSources.accounts
-          .account(accountId)
-          .buckets()
-          .create({ name }),
-      ).rejects.toMatchObject({
+      await expect(guestSession.resources.dataSources.accounts.account(accountId).cfn()).rejects.toMatchObject({
         code: errorCode.http.code.forbidden,
       });
     });
 
     it('should fail for external guest', async () => {
       const guestSession = await setup.createUserSession({ userRole: 'guest', projectId: [] });
-      const name = setup.gen.string({ prefix: 'ds-bucket-test' });
 
-      await expect(
-        guestSession.resources.dataSources.accounts
-          .account(accountId)
-          .buckets()
-          .create({ name }),
-      ).rejects.toMatchObject({
+      await expect(guestSession.resources.dataSources.accounts.account(accountId).cfn()).rejects.toMatchObject({
         code: errorCode.http.code.forbidden,
       });
     });
 
     it('should fail for researcher', async () => {
       const researcherSession = await setup.createResearcherSession();
-      const name = setup.gen.string({ prefix: 'ds-bucket-test' });
 
-      await expect(
-        researcherSession.resources.dataSources.accounts
-          .account(accountId)
-          .buckets()
-          .create({ name }),
-      ).rejects.toMatchObject({
+      await expect(researcherSession.resources.dataSources.accounts.account(accountId).cfn()).rejects.toMatchObject({
         code: errorCode.http.code.forbidden,
       });
     });
 
-    it('should return bucket registration information if admin', async () => {
+    it('should generate cfn template for the account for admin', async () => {
       const admin2Session = await setup.createAdminSession();
-      const name = setup.gen.string({ prefix: 'ds-bucket-test' });
 
-      await expect(
-        admin2Session.resources.dataSources.accounts
-          .account(accountId)
-          .buckets()
-          .create({ name }),
-      ).resolves.toMatchObject({ name, accountId });
+      await expect(admin2Session.resources.dataSources.accounts.account(accountId).cfn()).resolves.toHaveProperty(
+        'accountId',
+        accountId,
+      );
     });
   });
 });
