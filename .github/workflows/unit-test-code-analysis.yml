@@ -38,7 +38,10 @@ jobs:
       - name: Run unit tests
         run: |
           ./scripts/run-unit-tests.sh --stream
-      # - name: Test code coverage
-      #   run: |
-      #     pnpx
-      #     pnpm recursive install --unsafe-perm --stream
+      - name: Jest Annotations & Coverage
+        uses: mattallty/jest-github-action@v1.0.3
+        with:
+          # The test command to run
+          test-command: ./scripts/run-unit-tests.sh --stream
+          # Comment PRs with code coverage
+          changes-only: true
