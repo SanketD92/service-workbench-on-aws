@@ -32,12 +32,6 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm recursive install --unsafe-perm --stream
-      - name: Run static code analysis & linting tests
-        run: |
-          ./scripts/run-static-code-analysis.sh --stream
-      - name: Run unit tests
-        run: |
-          ./scripts/run-unit-tests.sh --stream
       - name: Jest Annotations & Coverage
         uses: mattallty/jest-github-action@v1.0.3
         with:

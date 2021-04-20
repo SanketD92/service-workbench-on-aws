@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pnpm run test --recursive --if-present --coverage $@
+pnpm run test --recursive --if-present $@
