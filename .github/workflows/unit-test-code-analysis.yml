@@ -32,12 +32,16 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm recursive install --unsafe-perm --stream
-      - name: Jest Annotations & Coverage
-        uses: mattallty/jest-github-action@v1.0.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
         with:
-          # The test command to run
-          test-command: pnpm run test --recursive --if-present --stream
-          # Comment PRs with code coverage
-          changes-only: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Jest Annotations & Coverage
+      #   uses: mattallty/jest-github-action@v1.0.3
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     # The test command to run
+      #     test-command: ./scripts/run-unit-tests.sh --stream
+      #     # Comment PRs with code coverage
+      #     changes-only: true
