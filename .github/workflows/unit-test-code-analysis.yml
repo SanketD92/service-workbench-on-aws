@@ -38,7 +38,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # The test command to run
-          test-command: |
-            ./scripts/run-unit-tests.sh --stream
+          test-command: pnpm run test --recursive --if-present --stream
           # Comment PRs with code coverage
           changes-only: true
