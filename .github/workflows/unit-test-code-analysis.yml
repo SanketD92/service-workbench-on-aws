@@ -34,6 +34,8 @@ jobs:
           pnpm recursive install --unsafe-perm --stream
       - name: Jest Annotations & Coverage
         uses: mattallty/jest-github-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # The test command to run
           test-command: ./scripts/run-unit-tests.sh --stream
