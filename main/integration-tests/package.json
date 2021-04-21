@@ -6,8 +6,8 @@
   "author": "Amazon Web Services",
   "license": "Apache-2.0",
   "scripts": {
-    "intTest": "NODE_ENV=test jest --testRunner='jest-circus/runner' --config jest.config.js --passWithNoTests --coverage --reporters=default --reporters=jest-junit",
-    "intTestWatch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --reporters=default --reporters=jest-junit --watchAll",
+    "intTest": "NODE_ENV=test jest --testRunner='jest-circus/runner' --config jest.config.js --passWithNoTests --coverage --coverageReporters=text --coverageReporters=text-summary",
+    "intTestWatch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --coverageReporters=text --coverageReporters=text-summary --watchAll",
     "lint": "pnpm run lint:eslint && pnpm run lint:prettier",
     "lint:eslint": "eslint --ignore-path .gitignore . ",
     "lint:prettier": "prettier --check --ignore-path .gitignore '**/*.{js,jsx}' ",
