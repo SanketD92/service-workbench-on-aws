@@ -27,8 +27,8 @@
   }, 
   
   "scripts": {
-    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --verbose --coverage --json --outputFile=./.build/test/jest.results.json",
-    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --verbose --coverage --json --outputFile=./.build/test/jest.results.json --watchAll",
+    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --verbose --coverage --json --outputFile=jest.results.json",
+    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --verbose --coverage --json --outputFile=jest.results.json --watchAll",
     "lint": "pnpm run lint:eslint && pnpm run lint:prettier",
     "lint:eslint": "eslint --quiet --ignore-path .gitignore .",
     "lint:prettier": "prettier --check --ignore-path .gitignore '**/*.{js,jsx}'",
