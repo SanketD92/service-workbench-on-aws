@@ -32,9 +32,9 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm recursive install --unsafe-perm --stream
-      # - name: Run unit tests
-      #   run: |
-      #     ./scripts/run-unit-tests.sh --stream
+      - name: Run unit tests
+        run: |
+          ./scripts/run-unit-tests.sh --stream
       # - name: Jest Coverage Report checkoutv1
       #   uses: actions/checkout@v1
       # - name: Jest Coverage Report
@@ -53,6 +53,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # The test command to run
-          test-command: ./scripts/run-unit-tests.sh --stream
+          # test-command: ./scripts/run-unit-tests.sh --stream
           # Comment PRs with code coverage
           changes-only: true
