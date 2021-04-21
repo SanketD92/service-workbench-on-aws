@@ -50,8 +50,8 @@
   }, 
   
   "scripts": {
-    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage --json --outputFile=jest.results.json",
-    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --json --outputFile=jest.results.json --watchAll",
+    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage --json --outputFile=/home/runner/work/service-workbench-on-aws/service-workbench-on-aws/jest.results.json",
+    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --json --outputFile=/home/runner/work/service-workbench-on-aws/service-workbench-on-aws/jest.results.json --watchAll",
     "babel": "babel src/ --out-dir dist/ --source-maps",
     "babel:watch": "babel src/ --out-dir dist/ --source-maps --watch",
     "build": "pnpm run babel",
