@@ -100,7 +100,7 @@ module.exports = async () => {
     rootDir: __dirname,
     verbose: false,
     notify: false,
-    testEnvironment: 'node',
+    testEnvironment: 'node', collectCoverageFrom: [' **/*.{js,jsx}', '!**/node_modules/**']
     testTimeout: 60 * 60 * 1000,
     // testPathIgnorePatterns: [],
 

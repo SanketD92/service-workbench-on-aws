@@ -18,5 +18,6 @@ module.exports = {
   // verbose: true,
   notify: false,
   testEnvironment: 'node',
+  collectCoverageFrom: [' **/*.{js,jsx}', '!**/node_modules/**'],
   // testPathIgnorePatterns: ['service.test.js'],
 };

@@ -17,7 +17,7 @@
 module.exports = {
   // verbose: true,
   notify: false,
-  testEnvironment: 'node',
+  testEnvironment: 'node', collectCoverageFrom: [' **/*.{js,jsx}', '!**/node_modules/**']
   testPathIgnorePatterns: ['/node_modules/', '/.history/', '/__tests__/__fixtures__/'],
   // Configure JUnit reporter as CodeBuild currently only supports JUnit or Cucumber reports
   // See https://docs.aws.amazon.com/codebuild/latest/userguide/test-reporting.html
