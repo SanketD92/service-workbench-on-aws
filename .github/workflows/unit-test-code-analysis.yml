@@ -35,12 +35,13 @@ jobs:
       - name: Run unit tests
         run: |
           ./scripts/run-unit-tests.sh --stream
+      - name: Jest Coverage Report checkoutv1
+        uses: actions/checkout@v1
       - name: Jest Coverage Report
-        - uses: actions/checkout@v1
-        - uses: artiomtr/jest-coverage-report-action@v1.2
-          with:
-              github_token: ${{ secrets.GITHUB_TOKEN }}
-              threshold: 80 # optional parameter
+        uses: artiomtr/jest-coverage-report-action@v1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          threshold: 80 # optional parameter
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
