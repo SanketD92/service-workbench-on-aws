@@ -31,7 +31,7 @@
   }, 
   
   "scripts": {
-    "test-gh": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage --json --outputFile=/home/runner/work/service-workbench-on-aws/service-workbench-on-aws/jest.results.json",
+    "test-gh": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --verbose --coverage --json --outputFile=/home/runner/work/service-workbench-on-aws/service-workbench-on-aws/jest.results.json",
     "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests",
     "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --watchAll",
     "lint": "pnpm run lint:eslint && pnpm run lint:prettier",
