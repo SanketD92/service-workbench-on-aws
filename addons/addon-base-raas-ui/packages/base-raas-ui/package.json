@@ -79,13 +79,10 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "regenerator-runtime": "^0.13.5"
   }, 
-  "jest": {
-    "collectCoverage": true,
-    "coverageReporters": ["html", "lcov"]
-},
+  
   "scripts": {
-    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage",
-    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --watchAll",
+    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage --reporters=default --reporters=jest-junit",
+    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --reporters=default --reporters=jest-junit --watchAll",
     "babel": "babel src/ --out-dir dist/ --source-maps",
     "babel:watch": "babel src/ --out-dir dist/ --source-maps --watch",
     "build": "pnpm run babel",

@@ -7,10 +7,7 @@
   "license": "Apache-2.0",
   "dependencies": {},
   "devDependencies": {}, 
-  "jest": {
-    "collectCoverage": true,
-    "coverageReporters": ["html", "lcov"]
-},
+  
   "scripts": {
     "test": "./run-tests.bash"
   }

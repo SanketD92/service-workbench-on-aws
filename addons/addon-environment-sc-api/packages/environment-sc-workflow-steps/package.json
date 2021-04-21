@@ -30,13 +30,10 @@
     "pretty-quick": "^1.11.1",
     "source-map-support": "^0.5.16"
   }, 
-  "jest": {
-    "collectCoverage": true,
-    "coverageReporters": ["html", "lcov"]
-},
+  
   "scripts": {
-    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage",
-    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --watchAll",
+    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage --reporters=default --reporters=jest-junit",
+    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --reporters=default --reporters=jest-junit --watchAll",
     "lint": "pnpm run lint:eslint && pnpm run lint:prettier",
     "lint:eslint": "eslint --quiet --ignore-path .gitignore . || true",
     "lint:prettier": "prettier --check --ignore-path .gitignore '**/*.{js,jsx}' || true",

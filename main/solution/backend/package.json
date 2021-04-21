@@ -77,13 +77,10 @@
       "<rootDir>/src/.+\\.js$": "babel-jest"
     }
   }, 
-  "jest": {
-    "collectCoverage": true,
-    "coverageReporters": ["html", "lcov"]
-},
+  
   "scripts": {
-    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage",
-    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --watchAll",
+    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage --reporters=default --reporters=jest-junit",
+    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --reporters=default --reporters=jest-junit --watchAll",
     "start-debug": "node --inspect node_modules/.bin/serverless offline start",
     "start": "sls offline --stage=$USER",
     "invoke": "sls invoke local --stage=$USER -f",
