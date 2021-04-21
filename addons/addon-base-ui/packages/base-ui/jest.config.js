@@ -16,7 +16,8 @@
 // jest.config.js
 module.exports = {
   notify: false,
-  testEnvironment: 'node', collectCoverageFrom: [' **/*.{js,jsx}', '!**/node_modules/**']
+  testEnvironment: 'node',
+  collectCoverageFrom: [' **/*.{js,jsx}', '!**/node_modules/**'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   setupFilesAfterEnv: ['<rootDir>/setup-tests.js'],
   // Configure JUnit reporter as CodeBuild currently only supports JUnit or Cucumber reports
