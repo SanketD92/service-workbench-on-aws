@@ -32,6 +32,9 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm recursive install --unsafe-perm --stream
+      - name: Run unit tests
+        run: |
+          ./scripts/run-unit-tests.sh --stream
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
