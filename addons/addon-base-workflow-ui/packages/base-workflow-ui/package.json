@@ -61,7 +61,11 @@
     "serverless-deployment-bucket": "^1.1.0",
     "typescript": "^3.7.5",
     "webpack": "4.41.2"
-  },
+  }, 
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["html", "lcov"]
+},
   "scripts": {
     "babel": "babel src/ --out-dir dist/ --source-maps",
     "babel:watch": "babel src/ --out-dir dist/ --source-maps --watch",

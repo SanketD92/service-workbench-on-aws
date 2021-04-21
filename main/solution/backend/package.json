@@ -76,10 +76,14 @@
     "transform": {
       "<rootDir>/src/.+\\.js$": "babel-jest"
     }
-  },
+  }, 
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["html", "lcov"]
+},
   "scripts": {
-    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests",
-    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --watchAll",
+    "test": "NODE_ENV=test jest --config jest.config.js --passWithNoTests --coverage",
+    "test:watch": "NODE_ENV=test jest --config jest.config.js  --passWithNoTests --coverage --watchAll",
     "start-debug": "node --inspect node_modules/.bin/serverless offline start",
     "start": "sls offline --stage=$USER",
     "invoke": "sls invoke local --stage=$USER -f",

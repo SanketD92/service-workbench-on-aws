@@ -6,7 +6,11 @@
   "author": "Amazon Web Services",
   "license": "Apache-2.0",
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {}, 
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["html", "lcov"]
+},
   "scripts": {
     "test": "./run-tests.bash"
   }

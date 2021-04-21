@@ -43,7 +43,11 @@
     "jest-junit": "^10.0.0",
     "prettier": "^1.19.1",
     "pretty-quick": "^1.11.1"
-  },
+  }, 
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["html", "lcov"]
+},
   "scripts": {
     "babel": "babel src/ --out-dir dist/ --source-maps",
     "babel:watch": "babel src/ --out-dir dist/ --source-maps --watch",
