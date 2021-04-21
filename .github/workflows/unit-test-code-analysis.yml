@@ -35,24 +35,12 @@ jobs:
       # - name: Run unit tests
       #   run: |
       #     ./scripts/run-unit-tests.sh --stream
-      - name: Jest Coverage Report checkoutv1
-        uses: actions/checkout@v1
-      - name: Jest Coverage Report
-        uses: artiomtr/jest-coverage-report-action@v1.2
+      - name: Jest Annotations & Coverage
+        uses: mattallty/jest-github-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          test_script: ./scripts/run-unit-tests.sh --stream
-          threshold: 80 # optional parameter
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Jest Annotations & Coverage
-      #   uses: mattallty/jest-github-action@v1.0.3
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     # The test command to run
-      #     test-command: ./scripts/run-unit-tests.sh --stream
-      #     # Comment PRs with code coverage
-      #     changes-only: true
+          # The test command to run
+          test-command: ./scripts/run-unit-tests.sh --stream
+          # Comment PRs with code coverage
+          changes-only: true
